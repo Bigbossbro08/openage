@@ -159,7 +159,6 @@ Extra options like regenerating gold, wood, and stone could be interesting for c
 A game mode where two players assemble an army of AI controlled units that are pinned
 against each other in a fight to the death. The player with the surviving army wins.
 
-
 Unit handling
 -------------
 
@@ -203,6 +202,10 @@ Unit handling
  - Auto-flee stance (especially for monks): Auto-task "flee" action as soon as an enemy unit comes near
  - Non-coward stance for villagers
  - Allow selecting the default stance
+ 
+ ### Horde/No Formation
+ 
+  - Players will have a new formation called no formation.
 
 ### Viewcone-feature for additional complexity
 
@@ -214,6 +217,9 @@ Unit handling
  - possibility to even have completely other gameplay styles/mods (like Stealth-RTS, see Micro-nerd Mode)
  - Kosmonautblog wrote an article about the viewcone in Shadow Tactics and how the developers were implementing it, you can find it here: https://web.archive.org/web/20190428103242/https://kosmonautblog.wordpress.com/2017/01/09/shadow-tactics-rendering-breakdown/
 
+### New Abilities
+
+ - Buildings will have new pack/unpack feature. Almost similar to Trebuchet. It'll kind of will do force place foundation when ordered to unpack to a certain location instead of unpacking instantly like Trebuchet. Certain variable can be used for changing pack/unpack speed.
 
 Multiplayer
 -----------
@@ -230,6 +236,10 @@ Multiplayer
  - Automatic skill groups to create balanced matches
  - Scale wonder cost to max pop and number of players (make wonders great again)
  - We can show the world that competitive games can be free open source!
+
+### Reconnect
+
+ - When players still in lobby voted for wait option they will have ability to reconnect.
 
 ### Tournament mode
 
@@ -364,6 +374,7 @@ New Units
 ### Land
 
  - transport waggon to slowly transport ships over land from one sea to another
+ - packed Town Center.
 
 
 Relics & Kings
