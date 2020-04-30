@@ -72,3 +72,6 @@ perf.data*
 # copyrighted assets
 /assets/converted/
 /assets/terrain/
+
+# external libraries/python environment location
+/external
