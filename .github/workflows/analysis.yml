@@ -122,8 +122,8 @@ jobs:
           export CC=clang
 
       - name: Install Include-what-you-use
-          run: |
-            sudo apt-get install -y iwyu
+        run: |
+          sudo apt-get install -y iwyu
 
       - name: Install scan-build (Python version)
         run: |
