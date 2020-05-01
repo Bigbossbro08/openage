@@ -203,10 +203,10 @@ jobs:
         run: |
           set -x
           git diff -U0 --no-color ${{ GITHUB.SHA }} | python buildsystem/scripts/clang-format/clang-format-diff.py -i -p1
-          git format-patch ${{ GITHUB.SHA }} > buildsystem/scripts/clang-format/clang-format-fixes_${{ GITHUB.SHA }}
+          git format-patch -1 ${{ GITHUB.SHA }} > buildsystem/scripts/clang-format/clang-format-fixes_${{ GITHUB.SHA }}
 
       - name: Upload Clang-Format fixes
         uses: actions/upload-artifact@master
         with:
-          name: clang-format-fixes_${GITHUB_SHA:0:8}
-          path: buildsystem/scripts/clang-format/clang-format-fixes_${GITHUB_SHA:0:8}
+          name: clang-format-fixes_${{ GITHUB.SHA }}
+          path: buildsystem/scripts/clang-format/clang-format-fixes_${{ GITHUB.SHA }}
