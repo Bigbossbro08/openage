@@ -151,20 +151,20 @@ jobs:
       - name: Upload clang-tidy fixes
         uses: actions/upload-artifact@master
         with:
-          name: clang-tidy-fixes_${GITHUB_SHA:0:8}
-          path: buildsystem/scripts/clang-tidy-fixes_${GITHUB_SHA:0:8}
+          name: clang-tidy-fixes_${{ GITHUB.SHA }}
+          path: buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}
 
       #         make -k CXX=/path/to/llvm/Debug+Asserts/bin/include-what-you-use 2> bin/iwyu.out
       - name: Include-what-you-use
         run: |
           chmod u+x ./buildsystem/scripts/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p "../../.bin"
-          which include-what-you-use > buildsystem/scripts/iwyu/iwyu-fixes_${GITHUB_SHA:0:8}
+          which include-what-you-use > buildsystem/scripts/iwyu/iwyu-fixes_${{ GITHUB.SHA }}
 
       - name: Upload Include-what-you-use fixes
         uses: actions/upload-artifact@master
         with:
-          name: iwyu-fixes_${GITHUB_SHA:0:8}
-          path: buildsystem/scripts/iwyu/iwyu-fixes_${GITHUB_SHA:0:8}
+          name: iwyu-fixes_${{ GITHUB.SHA }}
+          path: buildsystem/scripts/iwyu/iwyu-fixes${{ GITHUB.SHA }}
 
 # TODO: Clang-format file for fixes
 #         as soon as we have a clang-format file, we can format the exported fixes directly in the way we need it with
@@ -202,8 +202,8 @@ jobs:
       - name: Generate clang-format fixes
         run: |
           set -x
-          git diff -U0 --no-color HEAD^ | python buildsystem/scripts/clang-format/clang-format-diff.py -i -p1
-          git format-patch ${{ GITHUB.SHA }} > buildsystem/scripts/clang-format/clang-format-fixes_${GITHUB_SHA:0:8}
+          git diff -U0 --no-color ${{ GITHUB.SHA }} | python buildsystem/scripts/clang-format/clang-format-diff.py -i -p1
+          git format-patch ${{ GITHUB.SHA }} > buildsystem/scripts/clang-format/clang-format-fixes_${{ GITHUB.SHA }}
 
       - name: Upload Clang-Format fixes
         uses: actions/upload-artifact@master
