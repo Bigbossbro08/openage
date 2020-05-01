@@ -137,22 +137,28 @@ jobs:
           uname -m
           env
 
-      - name: Generate build files
+      - name: Configure build files
         run: |
           set -x
           ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan --clang-tidy
 
+      - name: Run compilation with clang-tidy
+        run: |
+          make build -j$(nproc)
+
+# TODO: Export fixes and upload
 #      - name: Run Clang-tidy
 #        run: |
 #          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -p "bin/" -config ".clang-tidy" -j "$(nproc)" -export-fixes "./buildsystem/scripts/clang-tidy/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml"
-
-      - name: Upload clang-tidy fixes
-        uses: actions/upload-artifact@master
-        with:
-          name: clang-tidy-fixes_${{ GITHUB.SHA }}
-          path: buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml
+#
+#      - name: Upload clang-tidy fixes
+#        uses: actions/upload-artifact@master
+#        with:
+#          name: clang-tidy-fixes_${{ GITHUB.SHA }}
+#          path: buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml
 
       #         make -k CXX=/path/to/llvm/Debug+Asserts/bin/include-what-you-use 2> bin/iwyu.out
+
       - name: Include-what-you-use
         run: |
           chmod u+x ./buildsystem/scripts/iwyu/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p "bin"
