@@ -78,7 +78,7 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          name: report
+          name: scan-build_report-commit-(${{ GITHUB.SHA }}
           path: report
 
       - name: Summarize report
