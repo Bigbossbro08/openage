@@ -144,7 +144,7 @@ jobs:
 
       - name: Clang-tidy
         run: |
-          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -j "$(nproc)" -export-fixes "clang-tidy-fixes_${{ GITHUB.SHA }}"  -p "../../.bin/"
+          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -j "$(nproc)" -export-fixes "clang-tidy-fixes_${{ GITHUB.SHA }}"  -p ".bin/"
 
       - name: Upload clang-tidy fixes
         uses: actions/upload-artifact@master
@@ -155,7 +155,7 @@ jobs:
       #         make -k CXX=/path/to/llvm/Debug+Asserts/bin/include-what-you-use 2> bin/iwyu.out
       - name: Include-what-you-use
         run: |
-          chmod u+x ./buildsystem/scripts/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p "../../.bin"
+          chmod u+x ./buildsystem/scripts/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p ".bin"
           which include-what-you-use > buildsystem/scripts/iwyu/iwyu-fixes_${{ GITHUB.SHA }}
 
       - name: Upload Include-what-you-use fixes
