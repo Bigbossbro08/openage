@@ -139,11 +139,11 @@ jobs:
       - name: Generate build files
         run: |
           set -x
-          ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan
+          ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan --clang-tidy
 
-      - name: Run Clang-tidy
-        run: |
-          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -p "bin/" -config ".clang-tidy" -j "$(nproc)" -export-fixes "./buildsystem/scripts/clang-tidy/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml"
+#      - name: Run Clang-tidy
+#        run: |
+#          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -p "bin/" -config ".clang-tidy" -j "$(nproc)" -export-fixes "./buildsystem/scripts/clang-tidy/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml"
 
       - name: Upload clang-tidy fixes
         uses: actions/upload-artifact@master
