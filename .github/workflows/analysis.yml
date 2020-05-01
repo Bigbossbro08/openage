@@ -126,10 +126,6 @@ jobs:
         run: |
           sudo apt-get install -y iwyu
 
-      - name: Install scan-build (Python version)
-        run: |
-          pip3 install scan-build beautifulsoup4 html5lib
-
       - name: Show environment settings
         shell: bash
         run: |
