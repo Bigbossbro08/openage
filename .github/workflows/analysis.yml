@@ -55,7 +55,8 @@ jobs:
             export CC=clang
 
       - name: Install scan-build (Python version)
-        run:  sudo pip3 install scan-build beautifulsoup4 html5lib
+        run: |
+          pip3 install scan-build beautifulsoup4 html5lib
 
       - name: Show environment settings
         shell: bash
@@ -127,7 +128,7 @@ jobs:
 
       - name: Install scan-build (Python version)
         run: |
-          sudo pip3 install scan-build beautifulsoup4 html5lib
+          pip3 install scan-build beautifulsoup4 html5lib
 
       - name: Show environment settings
         shell: bash
