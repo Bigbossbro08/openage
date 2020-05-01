@@ -70,15 +70,11 @@ jobs:
       - name: Generate build files
         run: |
           set -x
-          ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan
+          scan-build ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan
 
-      - name: Intercept during build
+      - name: Running scan-build
         run: |
-          intercept-build make build -j$(nproc)
-
-      - name: Analyze output
-        run: |
-          analyze-build -v -o report --html-title="openage (${GITHUB_SHA:0:8})"
+          scan-build --keep-cc -o report --html-title="openage (${{ GITHUB.SHA }})" make build -j$(nproc)
 
       - uses: actions/upload-artifact@master
         with:
@@ -90,7 +86,6 @@ jobs:
           echo "Full report is included in build Artifacts"
           echo
           chmod u+x ./.github/workflows-support/count-bugs.py && ./.github/workflows-support/count-bugs.py ${{ env.MAX_BUG_AMOUNT }} report/*/index.html
-
 
 
   clang_tidy_fixes:
