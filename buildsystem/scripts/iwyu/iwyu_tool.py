@@ -39,14 +39,12 @@ import argparse
 import tempfile
 import subprocess
 
-
 CORRECT_RE = re.compile(r'^\((.*?) has correct #includes/fwd-decls\)$')
 SHOULD_ADD_RE = re.compile(r'^(.*?) should add these lines:$')
 SHOULD_REMOVE_RE = re.compile(r'^(.*?) should remove these lines:$')
 FULL_LIST_RE = re.compile(r'The full include-list for (.*?):$')
 END_RE = re.compile(r'^---$')
 LINES_RE = re.compile(r'^- (.*?)  // lines ([0-9]+)-[0-9]+$')
-
 
 GENERAL, ADD, REMOVE, LIST = range(4)
 
@@ -98,7 +96,6 @@ FORMATTERS = {
     'clang': clang_formatter
 }
 
-
 if sys.platform.startswith('win'):
     # Case-insensitive match on Windows
     def normcase(s):
@@ -149,6 +146,7 @@ def win_split(cmdline):
     """ Minimal implementation of shlex.split for Windows following
     https://msdn.microsoft.com/en-us/library/windows/desktop/17w5ykft.aspx.
     """
+
     def split_iter(cmdline):
         in_quotes = False
         backslashes = 0
@@ -232,6 +230,7 @@ IWYU_EXECUTABLE = find_include_what_you_use()
 
 class Process(object):
     """ Manages an IWYU process in flight """
+
     def __init__(self, proc, outfile):
         self.proc = proc
         self.outfile = outfile
@@ -269,6 +268,7 @@ class Process(object):
 
 class Invocation(object):
     """ Holds arguments of an IWYU invocation. """
+
     def __init__(self, command, cwd):
         self.command = command
         self.cwd = cwd
@@ -450,9 +450,10 @@ def _bootstrap(sys_argv):
         """ Split around '--' into driver args and IWYU args. """
         try:
             double_dash = argv.index('--')
-            return argv[:double_dash], argv[double_dash+1:]
+            return argv[:double_dash], argv[double_dash + 1:]
         except ValueError:
             return argv, []
+
     argv, extra_args = partition_args(sys_argv[1:])
     args = parser.parse_args(argv)
 

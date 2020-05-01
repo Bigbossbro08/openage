@@ -40,6 +40,7 @@ from bs4 import BeautifulSoup
 #
 MAX_ISSUES = 40
 
+
 def summary_values(summary_table):
     if not summary_table:
         return
@@ -71,6 +72,7 @@ def print_summary(issues):
             text=warning, count=count, field_size=size))
     print()
 
+
 def parse_args(argv):
     # Guard: show the usage block for incorrect usage
     if len(argv) not in [2, 3]:
@@ -81,7 +83,7 @@ def parse_args(argv):
     if not os.path.isfile(report):
         print("{}: no such file".format(report))
         sys.exit(1)
-	# Good scenario: set our maximum and return it with the log
+    # Good scenario: set our maximum and return it with the log
     max_issues = MAX_ISSUES if len(argv) == 2 else int(argv[1])
     return max_issues, report
 
@@ -106,6 +108,8 @@ def main(argv):
 
     return rcode
 
+
 if __name__ == '__main__':
     import sys
+
     sys.exit(main(sys.argv))

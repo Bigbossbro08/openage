@@ -96,7 +96,7 @@ _C_COMMENT_END_RE = re.compile(r'.*\*/\s*(.*)$')
 _COMMENT_LINE_RE = re.compile(r'\s*//')
 _PRAGMA_ONCE_LINE_RE = re.compile(r'\s*#\s*pragma\s+once')
 _BLANK_LINE_RE = re.compile(r'\s*$')
-_IF_RE = re.compile(r'\s*#\s*if')               # compiles #if/ifdef/ifndef
+_IF_RE = re.compile(r'\s*#\s*if')  # compiles #if/ifdef/ifndef
 _ELSE_RE = re.compile(r'\s*#\s*(else|elif)\b')  # compiles #else/elif
 _ENDIF_RE = re.compile(r'\s*#\s*endif\b')
 # This is used to delete 'empty' namespaces after fwd-decls are removed.
@@ -160,7 +160,6 @@ _BARRIER_INCLUDES = re.compile(r'^\s*#\s*include\s+(<linux/)')
 _SOURCE_EXTENSIONS = [".c", ".C", ".cc", ".CC", ".cxx", ".CXX",
                       ".cpp", ".CPP", ".c++", ".C++", ".cp"]
 
-
 # Adapt Python 2 iterators to Python 3 syntax
 if sys.version_info[0] < 3:
     def next(i):
@@ -170,6 +169,7 @@ if sys.version_info[0] < 3:
 class OrderedSet(object):
     """ Sometimes sets affect order of outputs, which hinders testing. This
     (naive) set implementation preserves order to avoid that problem. """
+
     def __init__(self, iterable=None):
         iterable = iterable or []
         self.storage = OrderedDict((a, None) for a in iterable)
@@ -314,19 +314,19 @@ class IWYUOutputParser(object):
     # state.  value==None means that the key is an end state (that is,
     # its presence indicates the record is finished).
     _EXPECTED_NEXT_RE = {
-        None:               frozenset([_ADD_SECTION_RE, _NO_EDITS_RE]),
-        _ADD_SECTION_RE:    frozenset([_REMOVE_SECTION_RE]),
+        None: frozenset([_ADD_SECTION_RE, _NO_EDITS_RE]),
+        _ADD_SECTION_RE: frozenset([_REMOVE_SECTION_RE]),
         _REMOVE_SECTION_RE: frozenset([_TOTAL_SECTION_RE]),
-        _TOTAL_SECTION_RE:  frozenset([_SECTION_END_RE]),
-        _SECTION_END_RE:    None,
-        _NO_EDITS_RE:       None,
+        _TOTAL_SECTION_RE: frozenset([_SECTION_END_RE]),
+        _SECTION_END_RE: None,
+        _NO_EDITS_RE: None,
     }
 
     def __init__(self):
         # This is set to one of the 'section' REs above.  None is the start-state.
         self.current_section = None
         self.filename = '<unknown file>'
-        self.lines_by_section = {}     # key is an RE, value is a list of lines
+        self.lines_by_section = {}  # key is an RE, value is a list of lines
 
     def _ProcessOneLine(self, line, basedir=None):
         """Reads one line of input, updates self, and returns False at EORecord.
@@ -346,8 +346,8 @@ class IWYUOutputParser(object):
           FixIncludesError: if there is an out-of-order section or
           mismatched filename.
         """
-        line = line.rstrip()     # don't worry about line endings
-        if not line:             # just ignore blank lines
+        line = line.rstrip()  # don't worry about line endings
+        if not line:  # just ignore blank lines
             return True
 
         for (section_re, section_name) in self._RE_TO_NAME.items():
@@ -410,8 +410,8 @@ class IWYUOutputParser(object):
             if not self._ProcessOneLine(line, flags.basedir):
                 # returns False at end-of-record
                 break
-        else:                                  # for/else
-            return None                          # at EOF
+        else:  # for/else
+            return None  # at EOF
 
         # Now set up all the fields in an IWYUOutputRecord.
         # IWYUOutputRecord.filename
@@ -434,7 +434,7 @@ class IWYUOutputParser(object):
                 continue
             m = self._LINE_NUMBERS_COMMENT_RE.search(line)
             if not m:
-                continue   # not all #include lines have line numbers, but some do
+                continue  # not all #include lines have line numbers, but some do
             for line_number in range(int(m.group(1)), int(m.group(2)) + 1):
                 retval.some_include_lines.add(line_number)
 
@@ -442,13 +442,13 @@ class IWYUOutputParser(object):
         for line in (self.lines_by_section.get(self._REMOVE_SECTION_RE, []) +
                      self.lines_by_section.get(self._TOTAL_SECTION_RE, [])):
             # Everything that's not an #include is a forward-declare.
-            if line.startswith('- '):    # the 'remove' lines all start with '- '.
+            if line.startswith('- '):  # the 'remove' lines all start with '- '.
                 line = line[len('- '):]
             if _INCLUDE_RE.match(line):
                 continue
             m = self._LINE_NUMBERS_COMMENT_RE.search(line)
             if m:
-                line_range = (int(m.group(1)), int(m.group(2))+1)
+                line_range = (int(m.group(1)), int(m.group(2)) + 1)
                 retval.seen_forward_declare_lines.add(line_range)
                 if '::' in line:
                     retval.nested_forward_declare_lines.add(line_range)
@@ -567,6 +567,7 @@ class FileInfo(object):
         encoding. This is usually OK, because IWYU typically only adds ASCII content
         (or content pulled from the file itself).
         """
+
         def try_decode(buf, encoding):
             try:
                 buf.decode(encoding, errors='strict')
@@ -654,7 +655,7 @@ def _MarkHeaderGuardIfPresent(file_lines):
                 file_lines[i].type not in [_COMMENT_LINE_RE, _BLANK_LINE_RE,
                                            _PRAGMA_ONCE_LINE_RE]):
             break
-    else:     # for/else: got to EOF without finding any non-blank/comment lines
+    else:  # for/else: got to EOF without finding any non-blank/comment lines
         return
 
     # This next line is the candidate header guard-line.
@@ -672,10 +673,10 @@ def _MarkHeaderGuardIfPresent(file_lines):
             ifdef_depth += 1
         elif file_lines[ifdef_end].type == _ENDIF_RE:
             ifdef_depth -= 1
-            if ifdef_depth == 0:   # The end of our #ifdef!
+            if ifdef_depth == 0:  # The end of our #ifdef!
                 break
-    else:                      # for/else
-        return False             # Weird: never found a close to this #ifdef
+    else:  # for/else
+        return False  # Weird: never found a close to this #ifdef
 
     # Finally, all the lines after the end of the ifdef must be blank or comments.
     for i in range(ifdef_end + 1, len(file_lines)):
@@ -688,7 +689,7 @@ def _MarkHeaderGuardIfPresent(file_lines):
 
     # And the line after the header guard #ifdef is the '#define' (usually).
     if _HEADER_GUARD_DEFINE_RE.match(file_lines[ifdef_start + 1].line):
-        file_lines[ifdef_start+1].type = _HEADER_GUARD_DEFINE_RE
+        file_lines[ifdef_start + 1].type = _HEADER_GUARD_DEFINE_RE
 
 
 def _CalculateLineTypesAndKeys(file_lines, iwyu_record):
@@ -726,12 +727,12 @@ def _CalculateLineTypesAndKeys(file_lines, iwyu_record):
             # in the middle of the line, but that's hopefully quite rare.
             # TODO(csilvers): check for that case.
             m = _C_COMMENT_END_RE.match(line_info.line)
-            if not m:             # comment continues onto future lines
+            if not m:  # comment continues onto future lines
                 line_info.type = _COMMENT_LINE_RE
                 in_c_style_comment = True
             elif not m.group(1):  # comment extends across entire line (only)
                 line_info.type = _COMMENT_LINE_RE
-            else:                 # comment takes only part of line, treat as content
+            else:  # comment takes only part of line, treat as content
                 # TODO(csilvers): this mis-diagnoses lines like '/*comment*/class Foo;'
                 line_info.type = None
         elif in_c_style_comment and _C_COMMENT_END_RE.match(line_info.line):
@@ -755,14 +756,14 @@ def _CalculateLineTypesAndKeys(file_lines, iwyu_record):
                 if m:
                     line_info.type = type_re
                     if type_re == _INCLUDE_RE:
-                        line_info.key = m.group(1)   # get the 'key' for the #include.
+                        line_info.key = m.group(1)  # get the 'key' for the #include.
                     elif type_re in (_NAMESPACE_START_ALLMAN_RE,
                                      _NAMESPACE_START_MIXED_RE):
                         # set in_allman_or_mixed_namespace to true to find the next {
                         in_allman_or_mixed_namespace = True
                     break
-            else:    # for/else
-                line_info.type = None   # means we didn't match any re
+            else:  # for/else
+                line_info.type = None  # means we didn't match any re
 
         line_info.is_first_line_of_this_type = (line_info.type not in seen_types)
         seen_types.add(line_info.type)
@@ -852,8 +853,8 @@ def _LineNumberStartingPrecedingComments(file_lines, line_number):
     retval = line_number
     while retval > 0 and file_lines[retval - 1].type == _COMMENT_LINE_RE:
         retval -= 1
-    if retval <= 1:          # top-of-line comments
-        retval = line_number   # so ignore all the comment lines
+    if retval <= 1:  # top-of-line comments
+        retval = line_number  # so ignore all the comment lines
     return retval
 
 
@@ -952,9 +953,9 @@ def _CalculateReorderSpans(file_lines):
         if not _ContainsBarrierInclude(file_lines, sorted_move_spans[i]):
             while i < len(sorted_move_spans) - 1:
                 move_span_end = sorted_move_spans[i][1]
-                next_move_span_start = sorted_move_spans[i+1][0]
+                next_move_span_start = sorted_move_spans[i + 1][0]
                 if (_LinesAreAllBlank(file_lines, move_span_end, next_move_span_start)
-                        and not _ContainsBarrierInclude(file_lines, sorted_move_spans[i+1])):
+                        and not _ContainsBarrierInclude(file_lines, sorted_move_spans[i + 1])):
                     i += 1
                 else:
                     break
@@ -1042,7 +1043,7 @@ def _DeleteEmptyNamespaces(file_lines):
             if line_info.deleted:
                 end_line += 1
             elif line_info.type in (_COMMENT_LINE_RE, _BLANK_LINE_RE):
-                end_line += 1                # ignore blank lines
+                end_line += 1  # ignore blank lines
             elif line_info.type == _NAMESPACE_CONTINUE_ALLMAN_MIXED_RE:
                 namespace_depth += 1
                 end_line += 1
@@ -1062,13 +1063,13 @@ def _DeleteEmptyNamespaces(file_lines):
                                                                       start_line)
                     # And also blank lines.
                     while (start_line > 0 and
-                           file_lines[start_line-1].type == _BLANK_LINE_RE):
+                           file_lines[start_line - 1].type == _BLANK_LINE_RE):
                         start_line -= 1
                     for line_number in range(start_line, end_line):
                         file_lines[line_number].deleted = True
                     num_namespaces_deleted += 1
                     break
-            else:   # bail: we're at a line indicating this isn't an empty namespace
+            else:  # bail: we're at a line indicating this isn't an empty namespace
                 end_line = start_line + 1  # rewind to try again with nested namespaces
                 break
         start_line = end_line
@@ -1110,7 +1111,7 @@ def _DeleteEmptyIfdefs(file_lines):
             if line_info.deleted:
                 end_line += 1
             elif line_info.type in (_ELSE_RE, _COMMENT_LINE_RE, _BLANK_LINE_RE):
-                end_line += 1                # ignore blank lines
+                end_line += 1  # ignore blank lines
             elif line_info.type == _ENDIF_RE:
                 end_line += 1
                 # Delete any comments preceding this #ifdef as well.
@@ -1118,13 +1119,13 @@ def _DeleteEmptyIfdefs(file_lines):
                                                                   start_line)
                 # And also blank lines.
                 while (start_line > 0 and
-                       file_lines[start_line-1].type == _BLANK_LINE_RE):
+                       file_lines[start_line - 1].type == _BLANK_LINE_RE):
                     start_line -= 1
                 for line_number in range(start_line, end_line):
                     file_lines[line_number].deleted = True
                 num_ifdefs_deleted += 1
                 break
-            else:   # bail: we're at a line indicating this isn't an empty ifdef
+            else:  # bail: we're at a line indicating this isn't an empty ifdef
                 end_line = start_line + 1  # rewind to try again with nested #ifdefs
                 break
         start_line = end_line
@@ -1314,7 +1315,7 @@ def _GetToplevelReorderSpans(file_lines):
     Returns:
       A list of [start_line, end_line) reorder_spans.
     """
-    in_ifdef = [False] * len(file_lines)   # lines inside an #if
+    in_ifdef = [False] * len(file_lines)  # lines inside an #if
     ifdef_depth = 0
     for line_number in range(len(file_lines)):
         line_info = file_lines[line_number]
@@ -1359,8 +1360,8 @@ def _GetToplevelReorderSpans(file_lines):
             if (in_ifdef[line_number] or in_namespace[line_number] or
                     file_lines[line_number].is_nested_forward_declaration):
                 break
-        else:   # for/else
-            good_reorder_spans.append(reorder_span)    # never in ifdef or namespace
+        else:  # for/else
+            good_reorder_spans.append(reorder_span)  # never in ifdef or namespace
 
     return good_reorder_spans
 
@@ -1402,8 +1403,8 @@ def _GetNamespaceLevelReorderSpans(file_lines):
         """
         namespace_re = re.compile(r'\s*namespace\b(.*)')
         namespaces = []
-        namespace_line = namespace_line.split("/")[0] # remove C++ comments
-        namespace_line = namespace_line.split("{") # extract all namespaces
+        namespace_line = namespace_line.split("/")[0]  # remove C++ comments
+        namespace_line = namespace_line.split("{")  # extract all namespaces
         for namespace in namespace_line:
             m = namespace_re.match(namespace)
             if m:
@@ -1446,7 +1447,7 @@ def _GetNamespaceLevelReorderSpans(file_lines):
                 ifdef_depth -= 1
 
             elif ifdef_depth != 0:
-                continue # skip lines until we're outside of an ifdef block
+                continue  # skip lines until we're outside of an ifdef block
 
             # Build the simplified namespace dictionary.  When any new namespace is
             # encountered, add the namespace to the list using the next line to cover
@@ -1464,7 +1465,7 @@ def _GetNamespaceLevelReorderSpans(file_lines):
                         namespace_prefixes.append('namespace %s {' % namespace)
 
                 namespace_reorder_spans[' '.join(namespace_prefixes)] = (
-                    line_number+1, line_number+1)
+                    line_number + 1, line_number + 1)
 
             elif line_info.type == _NAMESPACE_START_ALLMAN_RE:
                 pending_namespace_prefix = ''
@@ -1506,7 +1507,7 @@ def _GetNamespaceLevelReorderSpans(file_lines):
                 pending_namespace_prefix += ' {'
                 namespace_prefixes.append(pending_namespace_prefix)
                 namespace_reorder_spans[' '.join(namespace_prefixes)] = (
-                    line_number+1, line_number+1)
+                    line_number + 1, line_number + 1)
 
             elif line_info.type == _NAMESPACE_END_RE:
                 # Remove C++ comments and count the ending brackets.
@@ -1540,13 +1541,13 @@ def _GetNamespaceLevelReorderSpans(file_lines):
 
 # These are potential 'kind' arguments to _FirstReorderSpanWith.
 # We also sort our output in this order, to the extent possible.
-_MAIN_CU_INCLUDE_KIND = 1         # e.g. #include "foo.h" when editing foo.cc
-_C_SYSTEM_INCLUDE_KIND = 2        # e.g. #include <stdio.h>
-_CXX_SYSTEM_INCLUDE_KIND = 3      # e.g. #include <vector>
-_NONSYSTEM_INCLUDE_KIND = 4       # e.g. #include "bar.h"
-_PROJECT_INCLUDE_KIND = 5         # e.g. #include "myproject/quux.h"
-_FORWARD_DECLARE_KIND = 6         # e.g. class Baz;
-_EOF_KIND = 7                     # used at eof
+_MAIN_CU_INCLUDE_KIND = 1  # e.g. #include "foo.h" when editing foo.cc
+_C_SYSTEM_INCLUDE_KIND = 2  # e.g. #include <stdio.h>
+_CXX_SYSTEM_INCLUDE_KIND = 3  # e.g. #include <vector>
+_NONSYSTEM_INCLUDE_KIND = 4  # e.g. #include "bar.h"
+_PROJECT_INCLUDE_KIND = 5  # e.g. #include "myproject/quux.h"
+_FORWARD_DECLARE_KIND = 6  # e.g. class Baz;
+_EOF_KIND = 7  # used at eof
 
 
 def _IsSystemInclude(line_info):
@@ -1731,10 +1732,10 @@ def _FirstReorderSpanWith(file_lines, good_reorder_spans, kind, filename,
     # 'good' span, so we skip past header guards and the like).  Basically,
     # the first contentful line is a line not in any reorder span.
     for i in range(len(good_reorder_spans) - 1):
-        if good_reorder_spans[i][1] != good_reorder_spans[i+1][0]:
+        if good_reorder_spans[i][1] != good_reorder_spans[i + 1][0]:
             first_contentful_line = good_reorder_spans[i][1]
             break
-    else:     # got to the end of the file without finding a break in the spans
+    else:  # got to the end of the file without finding a break in the spans
         if good_reorder_spans:
             first_contentful_line = good_reorder_spans[-1][1]
         else:
@@ -1782,7 +1783,7 @@ def _FirstReorderSpanWith(file_lines, good_reorder_spans, kind, filename,
             line_number += 1
         elif file_lines[line_number].type == _HEADER_GUARD_RE:
             seen_header_guard = True
-            line_number += 2    # skip over the header guard
+            line_number += 2  # skip over the header guard
         elif file_lines[line_number].type == _BLANK_LINE_RE:
             line_number += 1
         elif file_lines[line_number].type == _PRAGMA_ONCE_LINE_RE:
@@ -1897,7 +1898,7 @@ def _DecoratedMoveSpanLines(iwyu_record, file_lines, move_span_lines, flags):
                 move_span_lines[i].type in (_INCLUDE_RE, _FORWARD_DECLARE_RE)):
             first_contentful_line = i
             break
-    else:       # for/else
+    else:  # for/else
         # No include or forward-declare line seen, must be a deleted span.
         return None
 
@@ -1909,7 +1910,7 @@ def _DecoratedMoveSpanLines(iwyu_record, file_lines, move_span_lines, flags):
         sort_key = firstline.line
         iwyu_version = iwyu_record.full_include_lines.get(m.group(1), '')
         if _COMMENT_LINE_RE.search(iwyu_version):  # the iwyu version has comments
-            sort_key = iwyu_version                  # replace the comments
+            sort_key = iwyu_version  # replace the comments
         all_lines = ([li.line for li in move_span_lines[:-1] if not li.deleted] +
                      [sort_key])
     else:
@@ -1930,7 +1931,7 @@ def _DecoratedMoveSpanLines(iwyu_record, file_lines, move_span_lines, flags):
 
     # All we're left to do is the reorder-span we're in.  Hopefully it's easy.
     reorder_span = firstline.reorder_span
-    if reorder_span is None:     # must be a new #include we're adding
+    if reorder_span is None:  # must be a new #include we're adding
         # If we're a forward-declare inside a namespace, see if there's a
         # reorder span inside the same namespace we can fit into.
         if kind == _FORWARD_DECLARE_KIND:
@@ -2170,12 +2171,12 @@ def FixFileLines(iwyu_record, file_lines, flags, fileinfo):
         new_lines = []
         while (decorated_move_spans and
                decorated_move_spans[0][0] == current_reorder_span):
-            new_lines.extend(decorated_move_spans[0][3])   # the full content
+            new_lines.extend(decorated_move_spans[0][3])  # the full content
             if (len(decorated_move_spans) > 1 and
                     _ShouldInsertBlankLine(decorated_move_spans[0],
                                            decorated_move_spans[1], file_lines, flags)):
                 new_lines.append('')
-            decorated_move_spans = decorated_move_spans[1:]   # pop
+            decorated_move_spans = decorated_move_spans[1:]  # pop
 
         if not flags.keep_iwyu_namespace_format:
             # Now do the munging to convert namespace lines from the iwyu input
@@ -2188,7 +2189,7 @@ def FixFileLines(iwyu_record, file_lines, flags, fileinfo):
         new_lines = [nl.rstrip() + fileinfo.linesep for nl in new_lines]
 
         output_lines.extend(new_lines)
-        line_number = current_reorder_span[1]               # go to end of span
+        line_number = current_reorder_span[1]  # go to end of span
 
     return [line for line in output_lines if line is not None]
 
