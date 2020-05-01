@@ -145,7 +145,7 @@ option(
 )
 if(ENABLE_CLANG_TIDY)
 	# .clang-tidy in repository is used
-	set(CMAKE_CXX_CLANG_TIDY "clang-tidy;--config=,--export-fixes=${CMAKE_CURRENT_BINARY_DIR}/clang-tidy.patch, \
+	set(CMAKE_CXX_CLANG_TIDY "clang-tidy;--config=,--export-fixes=${CMAKE_CURRENT_BINARY_DIR}/clang-tidy-fixes.yaml, \
 	-extra-arg=-std=c++17")
 endif()
 
