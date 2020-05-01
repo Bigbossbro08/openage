@@ -142,7 +142,7 @@ jobs:
 
       - name: Clang-tidy
         run: |
-          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -j "$(nproc)" -export-fixes "clang-tidy-fixes_${GITHUB_SHA:0:8}"  -p "../../.bin/"
+          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -j "$(nproc)" -export-fixes "clang-tidy-fixes_${{ GITHUB.SHA }}"  -p "../../.bin/"
 
       - name: Upload clang-tidy fixes
         uses: actions/upload-artifact@master
