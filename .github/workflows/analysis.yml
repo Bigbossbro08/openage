@@ -62,6 +62,7 @@ jobs:
         shell: bash
         run: |
           set -x
+          which clang-tidy
           uname -a
           uname -s
           uname -m
