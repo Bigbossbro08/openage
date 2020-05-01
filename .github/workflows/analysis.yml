@@ -50,19 +50,18 @@ jobs:
 
       - name: Install C compiler
         run: |
-            sudo apt-get install -y --no-install-recommends clang-tidy clang-10 clang-tools-10 clang-10-doc libclang-common-10-dev libclang-10-dev libclang1-10 clang-format-10 clangd-10
+            sudo apt-get install -y --no-install-recommends clang-tidy clang-10 clang-tools clang-10-doc libclang-common-10-dev libclang-10-dev libclang1-10 clang-format-10 clangd-10
             export CXX=clang++
             export CC=clang
 
-      - name: Install scan-build (Python version)
+      - name: Install scan-build dependencies
         run: |
-          pip3 install scan-build beautifulsoup4 html5lib setuptools
+          pip3 install beautifulsoup4 html5lib
 
       - name: Show environment settings
         shell: bash
         run: |
           set -x
-          which clang-tidy
           uname -a
           uname -s
           uname -m
@@ -91,6 +90,8 @@ jobs:
           echo "Full report is included in build Artifacts"
           echo
           chmod u+x ./.github/workflows-support/count-bugs.py && ./.github/workflows-support/count-bugs.py ${{ env.MAX_BUG_AMOUNT }} report/*/index.html
+
+
 
   clang_tidy_fixes:
     name: Code-quality with fixes by clang-tidy, iwyu, cppcheck
