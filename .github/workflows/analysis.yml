@@ -73,19 +73,22 @@ jobs:
           scan-build ./configure --compiler=clang --mode=debug --flags="-Werror" --ccache --download-nyan
 
       - name: Running scan-build
+        id: scan-build
         run: |
-          scan-build -o report -k --html-title="openage (${{ GITHUB.SHA }})" make build -j$(nproc)
+          scan-build -o report -k --status-bugs --html-title="openage (${{ GITHUB.SHA }})" make build -j$(nproc)
 
       - uses: actions/upload-artifact@master
         with:
           name: scan-build_report-commit-(${{ GITHUB.SHA }}
           path: report
+        if: steps.scan-build.outcome == 'failure'
 
       - name: Summarize report
         run: |
           echo "Full report is included in build Artifacts"
           echo
           chmod u+x ./.github/workflows-support/count-bugs.py && ./.github/workflows-support/count-bugs.py ${{ env.MAX_BUG_AMOUNT }} report/*/index.html
+        if: steps.scan-build.outcome == 'failure'
 
 
   clang_tidy_fixes:
