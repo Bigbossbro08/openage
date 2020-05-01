@@ -173,7 +173,7 @@ jobs:
 #         add checks beside the standard checks
 
 
-  build_clang_format_fixes:
+  clang_format_fixes:
     name: Clang-format fixes
     runs-on: ubuntu-latest
 #   needs: run_linters  # If make checkall has no issues anymore, we can activate that.
