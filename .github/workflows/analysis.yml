@@ -48,7 +48,7 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends libc++-dev ccache flex make cmake cython3 libeigen3-dev libepoxy-dev libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libogg-dev libopus-dev libopusfile-dev libpng-dev libsdl2-dev libsdl2-image-dev python3-dev python3-jinja2 python3-numpy python3-pil python3-pip python3-pygments qml-module-qtquick-controls qtdeclarative5-dev
 
-      - name: Install C compiler
+      - name: Install Clang
         run: |
             sudo apt-get install -y --no-install-recommends clang-tidy clang-10 clang-tools clang-10-doc libclang-common-10-dev libclang-10-dev libclang1-10 clang-format-10 clangd-10
             export CXX=clang++
@@ -74,7 +74,7 @@ jobs:
 
       - name: Running scan-build
         run: |
-          scan-build --keep-cc -o report --html-title="openage (${{ GITHUB.SHA }})" make build -j$(nproc)
+          scan-build -o report -k --html-title="openage (${{ GITHUB.SHA }})" make build -j$(nproc)
 
       - uses: actions/upload-artifact@master
         with:
