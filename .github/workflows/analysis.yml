@@ -56,7 +56,7 @@ jobs:
 
       - name: Install scan-build (Python version)
         run: |
-          pip install scan-build beautifulsoup4 html5lib setuptools
+          pip3 install scan-build beautifulsoup4 html5lib setuptools
 
       - name: Show environment settings
         shell: bash
