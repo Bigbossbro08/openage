@@ -155,7 +155,7 @@ jobs:
       #         make -k CXX=/path/to/llvm/Debug+Asserts/bin/include-what-you-use 2> bin/iwyu.out
       - name: Include-what-you-use
         run: |
-          chmod u+x ./buildsystem/scripts/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p ".bin"
+          chmod u+x ./buildsystem/scripts/iwyu/iwyu_tool.py && ./buildsystem/scripts/iwyu/iwyu_tool.py -p "bin"
           which include-what-you-use > buildsystem/scripts/iwyu/iwyu-fixes_${{ GITHUB.SHA }}
 
       - name: Upload Include-what-you-use fixes
