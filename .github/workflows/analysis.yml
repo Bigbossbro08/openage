@@ -144,13 +144,13 @@ jobs:
 
       - name: Clang-tidy
         run: |
-          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -j "$(nproc)" -export-fixes "clang-tidy-fixes_${{ GITHUB.SHA }}"  -p ".bin/"
+          chmod u+x ./buildsystem/scripts/clang-tidy/run-clang-tidy.py && ./buildsystem/scripts/clang-tidy/run-clang-tidy.py -clang-tidy-binary "/usr/bin/clang-tidy" -config ".clang-tidy" -j "$(nproc)" -style ".clang-format" -export-fixes "buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml"  -p ".bin/"
 
       - name: Upload clang-tidy fixes
         uses: actions/upload-artifact@master
         with:
           name: clang-tidy-fixes_${{ GITHUB.SHA }}
-          path: buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}
+          path: buildsystem/scripts/clang-tidy-fixes_${{ GITHUB.SHA }}.yaml
 
       #         make -k CXX=/path/to/llvm/Debug+Asserts/bin/include-what-you-use 2> bin/iwyu.out
       - name: Include-what-you-use

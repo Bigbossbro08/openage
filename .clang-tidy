@@ -1,5 +1,5 @@
 ---
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-clang-analyzer-alpha*,-clang-analyzer-optin.performance.Padding'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-clang-analyzer-alpha*,-clang-analyzer-optin.performance.Padding,cppcoreguidelines-*,performance-*,llvm-*,bugprone-*,cert-*'
 HeaderFilterRegex: 'src/.*|unittest/.*'
-CheckOptions:
-...
+FormatStyle: .clang-format
+User: openage author
