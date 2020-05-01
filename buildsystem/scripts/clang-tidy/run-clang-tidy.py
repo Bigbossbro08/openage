@@ -231,7 +231,7 @@ def main():
                         help='Run clang-tidy in quiet mode')
     args = parser.parse_args()
 
-    db_path = 'compile_commands.json'
+    db_path = 'bin/compile_commands.json'
 
     if args.build_path is not None:
         build_path = args.build_path
