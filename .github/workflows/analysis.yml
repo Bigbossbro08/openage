@@ -201,13 +201,12 @@ jobs:
 
       - name: Generate clang-format fixes
         run: |
-          echo "Here we generate the fix and upload it as an artifact"
           set -x
           git diff -U0 --no-color HEAD^ | python buildsystem/scripts/clang-format/clang-format-diff.py -i -p1
-          git format-patch HEAD^ > buildsystem/scripts/clang-format/clang-format-fixes_${GITHUB_SHA:0:8}
+          git format-patch ${{ GITHUB.SHA }} > buildsystem/scripts/clang-format/clang-format-fixes_${GITHUB_SHA:0:8}
 
       - name: Upload Clang-Format fixes
         uses: actions/upload-artifact@master
         with:
           name: clang-format-fixes_${GITHUB_SHA:0:8}
-          path: buildsystem/scripts/iwyu/clang-format-fixes_${GITHUB_SHA:0:8}
+          path: buildsystem/scripts/clang-format/clang-format-fixes_${GITHUB_SHA:0:8}
