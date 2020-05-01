@@ -24,7 +24,7 @@ jobs:
         run: make checkall
 
   clang_static_analyzer:
-    name: Clang-tidy static analyzer
+    name: Scan-build static analyzer
     runs-on: ubuntu-latest
 #   needs: run_linters  # If make checkall has no issues anymore, we can activate that.
     steps:

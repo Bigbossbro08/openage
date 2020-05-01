@@ -144,7 +144,9 @@ option(
 	OFF
 )
 if(ENABLE_CLANG_TIDY)
-	set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=-*,readability-*")
+	set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-diagnostic-*,clang-analyzer-*, \
+	-clang-analyzer-alpha*,-clang-analyzer-optin.performance.Padding,cppcoreguidelines-*, \
+	performance-*,llvm-*, bugprone-*,cert-*, -extra-arg=-std=c++17")
 endif()
 
 
