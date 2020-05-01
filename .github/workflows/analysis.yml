@@ -10,7 +10,7 @@ env:
 jobs:
   run_linters:
     name: Code compliance
-    if: contains(github.repository, 'simonsan')==false       # CI for forks, don't run in the main repository
+    if: contains(github.repository, 'simonsan')==false       # TODO: CI for forks, don't run in the main repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
